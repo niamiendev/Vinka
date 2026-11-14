@@ -4,8 +4,8 @@ import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
+import { firestore, storage } from '@/libs/firebase'
 import { ProfileItem } from '@/models/profile-item'
-import { firestore, storage } from '@/services/firebase'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
@@ -14,14 +14,14 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    View,
 } from 'react-native'
 
 const EditProfileScreen = () => {

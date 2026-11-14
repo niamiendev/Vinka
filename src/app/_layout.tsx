@@ -3,7 +3,7 @@ import useAuth from "@/hooks/useAuth";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
-import { AuthProvider } from "../../providers/auth-provider";
+import { AuthProvider } from "../providers/auth-provider";
 
 SplashScreen.preventAutoHideAsync()
 

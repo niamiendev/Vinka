@@ -2,8 +2,8 @@ import XButton from '@/components/XButton'
 import XScreen from '@/components/XScreen'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
+import { firestore } from '@/libs/firebase'
 import { ProfileItem } from '@/models/profile-item'
-import { firestore } from '@/services/firebase'
 import { SOCIALS, SocialKey } from '@/utils/socials'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -11,14 +11,14 @@ import { router } from 'expo-router'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    View,
 } from 'react-native'
 
 type Links = Partial<Record<SocialKey, string>>

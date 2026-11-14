@@ -1,13 +1,13 @@
 import { AuthContext } from '@/context/auth-context'
-import { auth, firestore } from '@/services/firebase'
+import { auth, firestore } from '@/libs/firebase'
 import { getErrorMessage } from '@/utils/store'
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-  User,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
+    updateProfile,
+    User,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { ReactNode, useEffect, useRef, useState } from 'react'

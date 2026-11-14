@@ -4,6 +4,7 @@ import XInput from '@/components/XInput'
 import XScreen from '@/components/XScreen'
 import XSpace from '@/components/XSpace'
 import XText from '@/components/XText'
+import useAuth from '@/hooks/useAuth'
 import { colors } from '@/utils/theme'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -23,8 +24,11 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
+  const {register} = useAuth()
 
   const handleRegister = async () => {
+
+
     if (!name.trim() || !email.trim() || !password) {
       Alert.alert('Erreur', 'Merci de remplir tous les champs.')
       return
@@ -39,8 +43,9 @@ const RegisterScreen = () => {
     }
     try {
       setLoading(true)
-      // TODO: appel API d'inscription
-      // router.replace('/login')
+      await register(email, password)
+    } catch(error){
+      Alert.alert('Erreur', ""+error)
     } finally {
       setLoading(false)
     }
@@ -111,7 +116,7 @@ const RegisterScreen = () => {
           </XButton>
 
           <XSpace height={24} />
-          <Pressable style={styles.footer} onPress={() => router.replace('/login')}>
+          <Pressable style={styles.footer} onPress={() => router.back()}>
             <XText fontSize={14} textAlign="center">
               Déjà un compte ?{' '}
               <XText fontSize={14} fontWeight={700} color={colors.primary}>

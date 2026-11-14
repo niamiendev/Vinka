@@ -4,6 +4,7 @@ import XInput from '@/components/XInput'
 import XScreen from '@/components/XScreen'
 import XSpace from '@/components/XSpace'
 import XText from '@/components/XText'
+import useAuth from '@/hooks/useAuth'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { router } from 'expo-router'
@@ -21,6 +22,7 @@ import {
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
+  const { logout } = useAuth()
 
   const handleSend = async () => {
     if (!email.trim()) {
@@ -29,8 +31,11 @@ const ForgotPasswordScreen = () => {
     }
     try {
       setLoading(true)
-      // TODO: appel API pour envoyer le lien / code de réinitialisation
       Alert.alert('Email envoyé', 'Vérifie ta boîte de réception.')
+      await logout()
+    } catch (error) {
+      Alert.alert('Erreur', "" + error)
+
     } finally {
       setLoading(false)
     }
@@ -47,7 +52,7 @@ const ForgotPasswordScreen = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Image style = {{alignSelf:"center", height:150}} resizeMode='center' source={require("@/assets/images/icon-light.png")} />
+          <Image style={{ alignSelf: "center", height: 150 }} resizeMode='center' source={require("@/assets/images/icon-light.png")} />
           <Pressable style={styles.back} onPress={() => router.back()} hitSlop={10}>
             <Ionicons name="arrow-back" size={24} color={colors.textGrey} />
           </Pressable>
@@ -79,7 +84,7 @@ const ForgotPasswordScreen = () => {
           </XButton>
 
           <XSpace height={24} />
-          <Pressable style={styles.footer} onPress={() => router.replace('/login')}>
+          <Pressable style={styles.footer} onPress={() => router.back()}>
             <XText fontSize={14} fontWeight={700} color={colors.primary}>
               Retour à la connexion
             </XText>

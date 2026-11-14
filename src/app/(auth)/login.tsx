@@ -4,10 +4,12 @@ import XInput from '@/components/XInput'
 import XScreen from '@/components/XScreen'
 import XSpace from '@/components/XSpace'
 import XText from '@/components/XText'
+import useAuth from '@/hooks/useAuth'
 import { colors } from '@/utils/theme'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import {
+  Alert,
   Image, KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -19,14 +21,17 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
 
   const handleLogin = async () => {
     if (!email.trim() || !password) return
     try {
       setLoading(true)
-      // TODO: appel API de connexion
-      // router.replace('/(tabs)')
-    } finally {
+      await login(email, password)
+    } catch (error) {
+      Alert.alert('Erreur', "" + error)
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -43,7 +48,7 @@ const LoginScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <XColumn style={styles.header}>
-            <Image style={{ alignSelf: "center" , height:150 }} resizeMode='center' source={require("@/assets/images/icon-light.png")} />
+            <Image style={{ alignSelf: "center", height: 150 }} resizeMode='center' source={require("@/assets/images/icon-light.png")} />
             <XText fontSize={32} fontWeight={900} textAlign="center">
               Bon retour
             </XText>

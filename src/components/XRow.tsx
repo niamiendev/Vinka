@@ -2,7 +2,7 @@ import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 
 type Props = ViewProps & {
-    width?: number,
+    width?: number | string,
     padding?: number,
     justifyContent? : ViewStyle["justifyContent"],
     gap?: number, 

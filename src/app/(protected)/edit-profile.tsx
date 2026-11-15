@@ -15,6 +15,7 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import {
+  ActivityIndicator,
   Alert,
   Image,
   KeyboardAvoidingView,
@@ -41,6 +42,8 @@ const EditProfileScreen = () => {
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [photoMimeType, setPhotoMimeType] = useState<string>("image/jpeg");
   const [loading, setLoading] = useState(false);
+  const [isReady, setIsReady] = useState(true);
+
 
   useEffect(() => {
     async function fetchProfile() {
@@ -62,6 +65,7 @@ const EditProfileScreen = () => {
           setLocalisation(data.localisation ?? "");
           setPhoto(data.photo_url ?? null);
           setPhotoBase64(null);
+          setIsReady(false)
         }
       } catch (error) {
         console.error("Erreur chargement profil :", error);
@@ -109,7 +113,7 @@ const EditProfileScreen = () => {
   };
 
 
-
+  // sauvegarder
   const handleSave = async () => {
     if (!user) return;
 
@@ -165,130 +169,138 @@ const EditProfileScreen = () => {
 
   return (
     <XScreen paddingHorizontal={0} style={styles.screen}>
-      <KeyboardAvoidingView
-        style={styles.screen}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        {/* Header */}
-        <XRow
-          justifyContent="space-between"
-          width={"100%"}
-          style={{ paddingHorizontal: 16 }}
-        >
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={colors.textGrey}
-            onPress={() => router.back()}
-          />
-          <XText fontSize={18} fontWeight={700} textAlign="center">
-            Modifier mon profil
-          </XText>
-          <Ionicons
-            name="code-working"
-            size={24}
-            color={colors.textGrey}
-            onPress={() => router.navigate("/(protected)/social-network")}
-          />
-        </XRow>
-
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Avatar */}
-          <View style={styles.avatarWrapper}>
-            <Pressable onPress={pickImage}>
-              {photo ? (
-                <Image
-                  source={{ uri: photo }}
-                  style={styles.avatar}
-                  resizeMode="cover"
-                  onLoad={() => console.log("Photo chargée avec succès")}
-                  onError={(error) => {
-                    console.log("Erreur affichage photo :", error.nativeEvent);
-                  }}
-                />
-              ) : (
-                <View style={[styles.avatar, styles.avatarEmpty]}>
-                  <Ionicons
-                    name="person"
-                    size={56}
-                    color={colors.textGrey}
-                  />
-                </View>
-              )}
-
-              <View style={styles.camera}>
-                <Ionicons name="camera" size={18} color="white" />
-              </View>
-            </Pressable>
-
-            <TouchableOpacity
-              onPress={() => {
-                logout();
-                router.replace("/(auth)/login");
-              }}
+      {
+        isReady ? (
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <ActivityIndicator size={"large"} color={colors.primary} />
+          </View>
+        ) : (
+          <KeyboardAvoidingView
+            style={styles.screen}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+          >
+            {/* Header */}
+            <XRow
+              justifyContent="space-between"
+              width={"100%"}
+              style={{ paddingHorizontal: 16 }}
             >
-              <XText
-                fontSize={14}
-                fontWeight={600}
-                color={colors.primary}
-                style={{ marginTop: 8 }}
-              >
-                Logout
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={colors.textGrey}
+                onPress={() => router.back()}
+              />
+              <XText fontSize={18} fontWeight={700} textAlign="center">
+                Modifier mon profil
               </XText>
-            </TouchableOpacity>
-          </View>
+              <Ionicons
+                name="code-working"
+                size={24}
+                color={colors.textGrey}
+                onPress={() => router.navigate("/(protected)/social-network")}
+              />
+            </XRow>
 
-          <View style={styles.form}>
-            <XField
-              label="Nom complet"
-              value={fullName}
-              onChangeText={setFullName}
-              autoCapitalize="words"
-            />
-            <XField
-              label="Profession"
-              value={profession}
-              onChangeText={setProfession}
-            />
-            <XField
-              label="Entreprise"
-              value={company}
-              onChangeText={setCompany}
-            />
-            <XField
-              label="Téléphone"
-              value={phone}
-              onChangeText={setPhone}
-              keyboardType="phone-pad"
-              autoComplete="tel"
-            />
-            <XField
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-            />
-            <XField
-              label="Localisation"
-              value={localisation}
-              onChangeText={setLocalisation}
-              rightIcon="chevron-down"
-            />
-          </View>
+            <ScrollView
+              contentContainerStyle={styles.content}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+              {/* Avatar */}
+              <View style={styles.avatarWrapper}>
+                <Pressable onPress={pickImage}>
+                  {photo ? (
+                    <Image
+                      source={{ uri: photo }}
+                      style={styles.avatar}
+                      resizeMode="cover"
+                      onLoad={() => console.log("Photo chargée avec succès")}
+                      onError={(error) => {
+                        console.log("Erreur affichage photo :", error.nativeEvent);
+                      }}
+                    />
+                  ) : (
+                    <View style={[styles.avatar, styles.avatarEmpty]}>
+                      <Ionicons
+                        name="person"
+                        size={56}
+                        color={colors.textGrey}
+                      />
+                    </View>
+                  )}
 
-          <XButton width="100%" loading={loading} onPress={handleSave}>
-            <XText fontSize={16} fontWeight={700} color="white">
-              Enregistrer
-            </XText>
-          </XButton>
-        </ScrollView>
-      </KeyboardAvoidingView>
+                  <View style={styles.camera}>
+                    <Ionicons name="camera" size={18} color="white" />
+                  </View>
+                </Pressable>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    logout();
+                    router.replace("/(auth)/login");
+                  }}
+                >
+                  <XText
+                    fontSize={14}
+                    fontWeight={600}
+                    color={colors.primary}
+                    style={{ marginTop: 8 }}
+                  >
+                    Logout
+                  </XText>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.form}>
+                <XField
+                  label="Nom complet"
+                  value={fullName}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
+                />
+                <XField
+                  label="Profession"
+                  value={profession}
+                  onChangeText={setProfession}
+                />
+                <XField
+                  label="Entreprise"
+                  value={company}
+                  onChangeText={setCompany}
+                />
+                <XField
+                  label="Téléphone"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                  autoComplete="tel"
+                />
+                <XField
+                  label="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                />
+                <XField
+                  label="Localisation"
+                  value={localisation}
+                  onChangeText={setLocalisation}
+                  rightIcon="chevron-down"
+                />
+              </View>
+
+              <XButton width="100%" loading={loading} onPress={handleSave}>
+                <XText fontSize={16} fontWeight={700} color="white">
+                  Enregistrer
+                </XText>
+              </XButton>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        )
+      }
     </XScreen>
   );
 };

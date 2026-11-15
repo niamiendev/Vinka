@@ -4,8 +4,9 @@ import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
+import { firestore, storage } from '@/libs/firebase'
+import { getProfile } from '@/libs/profile.service'
 import { ProfileItem } from '@/models/profile-item'
-import { firestore, storage } from '@/services/firebase'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
@@ -21,6 +22,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 
@@ -36,129 +38,129 @@ const EditProfileScreen = () => {
 
   const [localisation, setLocalisation] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
-const [photoBase64, setPhotoBase64] = useState<string | null>(null);
-const [photoMimeType, setPhotoMimeType] = useState<string>("image/jpeg");
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
+  const [photoMimeType, setPhotoMimeType] = useState<string>("image/jpeg");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  async function fetchProfile() {
-    if (!user) return;
+    async function fetchProfile() {
+      if (!user) return;
 
-    try {
-      const data = (await getProfile(user.uid)) as ProfileItem | null;
+      try {
+        const data = (await getProfile(user.uid)) as ProfileItem | null;
 
-      if (data) {
-        setFullName(
-          `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim()
-        );
+        if (data) {
+          setFullName(
+            `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim()
+          );
 
-        setEmail(data.email ?? "");
-        setEmailPro(data.email_pro ?? "");
-        setProfession(data.profession ?? "");
-        setCompany(data.company ?? "");
-        setPhone(data.phone_pro ?? "");
-        setLocalisation(data.localisation ?? "");
-        setPhoto(data.photo_url ?? null);
-        setPhotoBase64(null);
+          setEmail(data.email ?? "");
+          setEmailPro(data.email_pro ?? "");
+          setProfession(data.profession ?? "");
+          setCompany(data.company ?? "");
+          setPhone(data.phone_pro ?? "");
+          setLocalisation(data.localisation ?? "");
+          setPhoto(data.photo_url ?? null);
+          setPhotoBase64(null);
+        }
+      } catch (error) {
+        console.error("Erreur chargement profil :", error);
       }
-    } catch (error) {
-      console.error("Erreur chargement profil :", error);
     }
-  }
 
-  fetchProfile();
-}, [user?.uid]);
-
-  
-const pickImage = async () => {
-  const permission =
-    await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-  if (!permission.granted) {
-    Alert.alert(
-      "Permission refusée",
-      "Autorise l'accès aux photos dans les réglages."
-    );
-    return;
-  }
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ["images"],
-    allowsEditing: true,
-    aspect: [1, 1],
-    quality: 0.8,
-    base64: true,
-  });
-
-  if (result.canceled || !result.assets.length) return;
-
-  const asset = result.assets[0];
-
-  if (!asset.base64) {
-    Alert.alert("Erreur", "Impossible de lire cette image.");
-    return;
-  }
-
-  setPhoto(asset.uri);
-  setPhotoBase64(asset.base64);
-  setPhotoMimeType(asset.mimeType ?? "image/jpeg");
-
-  console.log("Format image :", asset.mimeType);
-};
+    fetchProfile();
+  }, [user?.uid]);
 
 
-  
-const handleSave = async () => {
-  if (!user) return;
+  const pickImage = async () => {
+    const permission =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-  if (!fullName.trim()) {
-    Alert.alert("Erreur", "Le nom est obligatoire.");
-    return;
-  }
+    if (!permission.granted) {
+      Alert.alert(
+        "Permission refusée",
+        "Autorise l'accès aux photos dans les réglages."
+      );
+      return;
+    }
 
-  try {
-    setLoading(true);
-
-    let photo_url = photo;
-
-    if (photo && !photo.startsWith("http")) {
-  const response = await fetch(photo);
-  const blob = await response.blob();
-
-  const storageRef = ref(storage, `profiles/${user.uid}.jpg`);
-
-  await uploadBytes(storageRef, blob, {
-    contentType: "image/jpeg",
-  });
-
-  photo_url = await getDownloadURL(storageRef);
-}
-
-    const names = fullName.trim().split(/\s+/);
-
-const first_name = names[0] ?? "";
-const last_name = names.slice(1).join(" ");
-
-    await updateDoc(doc(firestore, "Profiles", user.uid), {
-      first_name,
-      last_name,
-      profession: profession.trim() || null,
-      company: company.trim() || null,
-      phone_pro: phone.trim() || null,
-      email_pro: emailPro.trim() || null,
-      localisation: localisation.trim() || null,
-      photo_url,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+      base64: true,
     });
 
-    Alert.alert("Succès", "Profil mis à jour.");
+    if (result.canceled || !result.assets.length) return;
 
-  } catch (e) {
-    console.error("Erreur sauvegarde :", e);
-    Alert.alert("Erreur", "Impossible d'enregistrer le profil.");
-  } finally {
-    setLoading(false);
-  }
-};
+    const asset = result.assets[0];
+
+    if (!asset.base64) {
+      Alert.alert("Erreur", "Impossible de lire cette image.");
+      return;
+    }
+
+    setPhoto(asset.uri);
+    setPhotoBase64(asset.base64);
+    setPhotoMimeType(asset.mimeType ?? "image/jpeg");
+
+    console.log("Format image :", asset.mimeType);
+  };
+
+
+
+  const handleSave = async () => {
+    if (!user) return;
+
+    if (!fullName.trim()) {
+      Alert.alert("Erreur", "Le nom est obligatoire.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      let photo_url = photo;
+
+      if (photo && !photo.startsWith("http")) {
+        const response = await fetch(photo);
+        const blob = await response.blob();
+
+        const storageRef = ref(storage, `profiles/${user.uid}.jpg`);
+
+        await uploadBytes(storageRef, blob, {
+          contentType: "image/jpeg",
+        });
+
+        photo_url = await getDownloadURL(storageRef);
+      }
+
+      const names = fullName.trim().split(/\s+/);
+
+      const first_name = names[0] ?? "";
+      const last_name = names.slice(1).join(" ");
+
+      await updateDoc(doc(firestore, "Profiles", user.uid), {
+        first_name,
+        last_name,
+        profession: profession.trim() || null,
+        company: company.trim() || null,
+        phone_pro: phone.trim() || null,
+        email_pro: emailPro.trim() || null,
+        localisation: localisation.trim() || null,
+        photo_url,
+      });
+
+      Alert.alert("Succès", "Profil mis à jour.");
+
+    } catch (e) {
+      console.error("Erreur sauvegarde :", e);
+      Alert.alert("Erreur", "Impossible d'enregistrer le profil.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
@@ -197,31 +199,31 @@ const last_name = names.slice(1).join(" ");
         >
           {/* Avatar */}
           <View style={styles.avatarWrapper}>
-  <Pressable onPress={pickImage}>
-    {photo ? (
-      <Image
-        source={{ uri: photo }}
-        style={styles.avatar}
-        resizeMode="cover"
-        onLoad={() => console.log("Photo chargée avec succès")}
-        onError={(error) => {
-          console.log("Erreur affichage photo :", error.nativeEvent);
-        }}
-      />
-    ) : (
-      <View style={[styles.avatar, styles.avatarEmpty]}>
-        <Ionicons
-          name="person"
-          size={56}
-          color={colors.textGrey}
-        />
-      </View>
-    )}
+            <Pressable onPress={pickImage}>
+              {photo ? (
+                <Image
+                  source={{ uri: photo }}
+                  style={styles.avatar}
+                  resizeMode="cover"
+                  onLoad={() => console.log("Photo chargée avec succès")}
+                  onError={(error) => {
+                    console.log("Erreur affichage photo :", error.nativeEvent);
+                  }}
+                />
+              ) : (
+                <View style={[styles.avatar, styles.avatarEmpty]}>
+                  <Ionicons
+                    name="person"
+                    size={56}
+                    color={colors.textGrey}
+                  />
+                </View>
+              )}
 
-    <View style={styles.camera}>
-      <Ionicons name="camera" size={18} color="white" />
-    </View>
-  </Pressable>
+              <View style={styles.camera}>
+                <Ionicons name="camera" size={18} color="white" />
+              </View>
+            </Pressable>
 
             <TouchableOpacity
               onPress={() => {

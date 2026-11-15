@@ -1,4 +1,5 @@
 import { AuthContext } from '@/context/auth-context'
+<<<<<<< HEAD
 import { auth, firestore } from '@/libs/firebase'
 import { getErrorMessage } from '@/utils/store'
 import {
@@ -48,6 +49,21 @@ const fetchOrCreateProfile = async (user: User): Promise<void> => {
 
   //await setDoc(userRef, buildProfile(user))
 }
+=======
+import { auth } from '@/libs/firebase'
+import { createProfile } from '@/libs/profile.service'
+import { getErrorMessage } from '@/utils/store'
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  User,
+} from 'firebase/auth'
+import { ReactNode, useEffect, useState } from 'react'
+
+>>>>>>> d645a6c86e3e136b19af7108463f689c36188268
 
 type AuthProviderProps = {
   children: ReactNode
@@ -56,6 +72,7 @@ type AuthProviderProps = {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
+<<<<<<< HEAD
   const registering = useRef(false)
 
   useEffect(() => {
@@ -69,12 +86,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         console.error(e)
       } finally {
         setUser(firebaseUser)
+=======
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+
+      try {
+
+        if (firebaseUser) { setUser(firebaseUser) }
+        
+      } catch (e) {
+        console.error(e)
+      } finally {
+>>>>>>> d645a6c86e3e136b19af7108463f689c36188268
         setLoading(false)
       }
     })
     return unsubscribe
   }, [])
 
+<<<<<<< HEAD
+=======
+  // login
+>>>>>>> d645a6c86e3e136b19af7108463f689c36188268
   const login = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password)
@@ -83,6 +117,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+<<<<<<< HEAD
   const register = async (email: string, password: string, name?: string) => {
     try {
       registering.current = true
@@ -97,10 +132,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       )
 
       // 2. Puis le displayName dans Firebase Auth
+=======
+  // register
+  const register = async (email: string, password: string, name?: string) => {
+    try {
+
+      const credential = await createUserWithEmailAndPassword(auth, email.trim(), password)
+
+>>>>>>> d645a6c86e3e136b19af7108463f689c36188268
       if (name?.trim()) {
         await updateProfile(credential.user, { displayName: name.trim() })
       }
 
+<<<<<<< HEAD
       // 3. Le profil existe : on déclenche la redirection
       setUser(credential.user)
     } catch (error) {
@@ -111,6 +155,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+=======
+      if (credential.user) {
+        await createProfile(credential.user)
+      }
+
+      setUser(credential.user)
+
+    } catch (error) {
+      if (auth.currentUser) await signOut(auth).catch(() => { })
+      throw new Error(getErrorMessage(error))
+    } finally {}
+  }
+
+  // logout
+>>>>>>> d645a6c86e3e136b19af7108463f689c36188268
   const logout = async () => {
     try {
       await signOut(auth)

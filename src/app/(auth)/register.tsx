@@ -28,7 +28,6 @@ const RegisterScreen = () => {
 
   const handleRegister = async () => {
 
-
     if (!name.trim() || !email.trim() || !password) {
       Alert.alert('Erreur', 'Merci de remplir tous les champs.')
       return

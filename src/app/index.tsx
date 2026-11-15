@@ -8,7 +8,7 @@ export default function Index() {
 
   return (
     <Redirect
-      href={user ? '/(protected)/home' : '/(auth)/login'}
+      href={user ? '/(protected)/edit-profile' : '/(auth)/login'}
     />
   );
 }

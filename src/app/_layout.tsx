@@ -1,9 +1,9 @@
 
 import useAuth from "@/hooks/useAuth";
+import { AuthProvider } from "@/providers/auth-provider";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
-import { AuthProvider } from "../../providers/auth-provider";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -18,7 +18,7 @@ const RootNavigator = () => {
 
   return (
     <>
-      <StatusBar />
+      <StatusBar barStyle="dark-content" />
       <Stack screenOptions={{ headerShown: false }} >
         <Stack.Screen name="index" />
         <Stack.Screen name="onboarding" />

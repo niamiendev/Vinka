@@ -3,7 +3,7 @@ import { Platform, StyleSheet } from 'react-native'
 import { SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context'
 
 type Props = SafeAreaViewProps & {
-    paddingHorizontal?:number
+    paddingHorizontal?: number
 }
 
 const XScreen = ({ paddingHorizontal = 16, children, style, ...rest }: Props) => {
@@ -28,7 +28,7 @@ export default XScreen
 const styles = StyleSheet.create({
     container: {
         //flex: 1,
-        backgroundColor:colors.background,
+        backgroundColor: colors.background,
         paddingTop: Platform.OS === "android" ? 16 : 0
     }
 })

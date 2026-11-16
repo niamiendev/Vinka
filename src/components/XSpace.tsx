@@ -3,10 +3,11 @@ import { StyleSheet, View, ViewProps } from 'react-native'
 
 type Props = ViewProps & {
     width?: number,
-    height?: number
+    height?: number,
+    backgroundColor?: string,
 }
 
-const XSpace = ({ width, height, style, children, ...rest }: Props) => {
+const XSpace = ({ width, height, backgroundColor, style, children, ...rest }: Props) => {
     return (
         <View
             {...rest}
@@ -14,7 +15,7 @@ const XSpace = ({ width, height, style, children, ...rest }: Props) => {
                 [
                     styles.container,
                     {
-                        width, height
+                        width, height, backgroundColor
                     },
                     style
                 ]

@@ -1,4 +1,6 @@
 import XButton from '@/components/XButton'
+import XColumn from '@/components/XColumn'
+import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
@@ -11,14 +13,14 @@ import { router } from 'expo-router'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
 } from 'react-native'
 
 type Links = Partial<Record<SocialKey, string>>
@@ -69,14 +71,14 @@ const SocialsScreen = () => {
         style={styles.screen}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={styles.header}>
+        <XRow width={"100%"} style={styles.header}>
           <Pressable onPress={() => router.back()} hitSlop={10} style={styles.back}>
             <Ionicons name="arrow-back" size={24} color={colors.textGrey} />
           </Pressable>
           <XText fontSize={18} fontWeight={700} textAlign="center">
             Réseaux sociaux
           </XText>
-        </View>
+        </XRow>
 
         <ScrollView
           contentContainerStyle={styles.content}
@@ -87,9 +89,9 @@ const SocialsScreen = () => {
             Ajoutez vos liens
           </XText>
 
-          <View style={styles.list}>
+          <XColumn style={styles.list}>
             {SOCIALS.map((s) => (
-              <View key={s.key} style={styles.row}>
+              <XRow key={s.key} style={styles.row}>
                 <View style={[styles.iconCircle, { backgroundColor: s.color }]}>
                   <Ionicons
                     name={s.icon}
@@ -112,9 +114,9 @@ const SocialsScreen = () => {
                     style={styles.input}
                   />
                 </View>
-              </View>
+              </XRow>
             ))}
-          </View>
+          </XColumn>
 
           <XButton width="100%" loading={loading} onPress={handleSave}>
             <XText fontSize={16} fontWeight={700} color="white">
@@ -132,12 +134,14 @@ export default SocialsScreen
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   header: {
-    height: 56,
+    //height: 56,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 0,
+    //paddingBottom: 16,
+    //backgroundColor: colors.ternary,
   },
-  back: { position: 'absolute', left: 24, zIndex: 1 },
-  content: { paddingHorizontal: 24, paddingVertical: 16, paddingBottom: 32 },
+  back: { position: 'absolute', left: 16, zIndex: 1 },
+  content: { paddingHorizontal: 16, paddingVertical: 16, paddingBottom: 32 },
   list: { marginTop: 24, marginBottom: 24, gap: 18 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   iconCircle: {

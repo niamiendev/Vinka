@@ -4,13 +4,14 @@ import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
-import { firestore, storage } from '@/libs/firebase'
+import { auth, firestore, storage } from '@/libs/firebase'
 import { getProfile } from '@/libs/profile.service'
 import { ProfileItem } from '@/models/profile-item'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router'
+import { updateProfile } from 'firebase/auth'
 import { doc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
@@ -122,8 +123,6 @@ const EditProfileScreen = () => {
       return;
     }
 
-
-
     try {
       setLoading(true);
 
@@ -158,6 +157,14 @@ const EditProfileScreen = () => {
         photo_url,
       });
 
+      await updateProfile(
+        auth.currentUser!,
+        {
+          displayName: fullName + " " + last_name,
+          photoURL: photo_url,
+        }
+      );
+
       Alert.alert("Succès", "Profil mis à jour.");
 
     } catch (e) {
@@ -173,7 +180,6 @@ const EditProfileScreen = () => {
       router.back();
     }
   }
-
 
   return (
     <XScreen paddingHorizontal={0} style={styles.screen}>
@@ -203,7 +209,7 @@ const EditProfileScreen = () => {
                 Modifier mon profil
               </XText>
               <Ionicons
-                name="code-working"
+                name="globe-outline"
                 size={24}
                 color={colors.textGrey}
                 onPress={() => router.navigate("/(protected)/social-network")}

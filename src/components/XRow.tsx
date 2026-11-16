@@ -4,12 +4,13 @@ import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 type Props = ViewProps & {
     width?: number | string,
     padding?: number,
-    justifyContent? : ViewStyle["justifyContent"],
-    gap?: number, 
-    backgroundColor?:string
+    justifyContent?: ViewStyle["justifyContent"],
+
+    gap?: number,
+    backgroundColor?: string
 }
 
-const XRow = ({ justifyContent = "space-between" , backgroundColor, width, padding, style, children, ...rest }: Props) => {
+const XRow = ({ justifyContent = "space-between", backgroundColor, width, padding, style, children, ...rest }: Props) => {
     return (
         <View
             {...rest}
@@ -32,8 +33,8 @@ export default XRow
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection:"row",
+        flexDirection: "row",
         backgroundColor: "transparent",
-        alignItems:"center"
+        alignItems: "center"
     }
 })

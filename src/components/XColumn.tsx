@@ -2,13 +2,14 @@ import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 
 type Props = ViewProps & {
-    width?: number,
+    width?: number | string,
+    backgroundColor?: string,
     padding?: number,
-    alignItems? : ViewStyle["alignItems"],
+    alignItems?: ViewStyle["alignItems"],
     gap?: number
 }
 
-const XColumn = ({ gap, alignItems = "center" , width, padding, style, children, ...rest }: Props) => {
+const XColumn = ({ gap, alignItems = "center", width, padding, backgroundColor, style, children, ...rest }: Props) => {
     return (
         <View
             {...rest}
@@ -16,7 +17,7 @@ const XColumn = ({ gap, alignItems = "center" , width, padding, style, children,
                 [
                     styles.container,
                     {
-                        width, padding, alignItems, gap
+                        width, padding, alignItems, gap, backgroundColor
                     },
                     style
                 ]

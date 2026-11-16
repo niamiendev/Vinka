@@ -122,6 +122,8 @@ const EditProfileScreen = () => {
       return;
     }
 
+
+
     try {
       setLoading(true);
 
@@ -166,6 +168,12 @@ const EditProfileScreen = () => {
     }
   };
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    }
+  }
+
 
   return (
     <XScreen paddingHorizontal={0} style={styles.screen}>
@@ -189,7 +197,7 @@ const EditProfileScreen = () => {
                 name="arrow-back"
                 size={24}
                 color={colors.textGrey}
-                onPress={() => router.back()}
+                onPress={handleBack}
               />
               <XText fontSize={18} fontWeight={700} textAlign="center">
                 Modifier mon profil
@@ -236,16 +244,21 @@ const EditProfileScreen = () => {
                 </Pressable>
 
                 <TouchableOpacity
+                  style={{ flexDirection: "row", justifyContent: "center", gap: 8, alignItems: "center" }}
                   onPress={() => {
                     logout();
                     router.replace("/(auth)/login");
                   }}
                 >
+                  <Ionicons
+                    name="log-out-outline"
+                    size={24}
+                    color={colors.textGrey}
+                  />
                   <XText
                     fontSize={14}
                     fontWeight={600}
                     color={colors.primary}
-                    style={{ marginTop: 8 }}
                   >
                     Logout
                   </XText>

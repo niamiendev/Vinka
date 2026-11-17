@@ -67,7 +67,7 @@ const QRCodedeScreen = () => {
         <XRow justifyContent="space-between" width="100%">
           <Ionicons onPress={handlBackPress} name="arrow-back-outline" size={24} color="black" />
 
-          <XText fontSize={18} fontWeight={900} textAlign="center">
+          <XText fontSize={18} fontWeight={700} textAlign="center">
             Mon QR Code
           </XText>
           <Ionicons onPress={handleSharePress} name="share-social-outline" size={24} color="black" />
@@ -85,7 +85,7 @@ const QRCodedeScreen = () => {
           <XSpace height={8} />
 
           <XColumn style={{ alignItems: "center", gap: 12 }}>
-            <XText textAlign='center' fontSize={24} fontWeight={700} color={colors.text}  >
+            <XText textAlign='center' fontSize={24} fontWeight={900} color={colors.text}  >
               {
                 profile?.first_name && profile?.last_name ?
                   `${profile.first_name} ${profile.last_name}` :

@@ -60,7 +60,7 @@ const HomeScreen = () => {
       <XScreen style={{ flex: 1 }}>
         {/* HEARDER */}
         <XRow>
-          <XText fontSize={24} fontWeight={900} textAlign="center">
+          <XText fontSize={24} fontWeight={700} textAlign="center">
             Bonjour, {profile?.first_name || user?.displayName || 'utilisateur'}
           </XText>
           <Ionicons onPress={handleProfilePress} name="person-outline" size={24} color="black" />
@@ -113,7 +113,7 @@ const HomeScreen = () => {
             </XColumn>
           </XRow>
 
-          <XColumn width="100%" gap={12}
+          <XColumn width="100%" gap={8}
             backgroundColor={colors.background}
             style={{ paddingTop: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, }}
           >
@@ -121,16 +121,16 @@ const HomeScreen = () => {
             <XQrcode />
             <XSpace height={8} />
 
-            <XButton width="100%">
+            <XButton width="100%" backgroundColor={colors.ternary}>
               <XRow gap={8} >
-                <Ionicons name="share-social-outline" size={24} color={colors.white} />
-                <XText color={colors.white}  >Partager ma carte</XText>
+                <Ionicons name="share-social-outline" size={24} color={colors.text} />
+                <XText color={colors.text}  >Partager ma carte</XText>
               </XRow>
             </XButton>
-            <XButton width="100%" backgroundColor={colors.textGrey} onPress={handleMyCardPress}>
+            <XButton width="100%" backgroundColor={colors.secondary} onPress={handleMyCardPress}>
               <XRow gap={8} >
-                <Ionicons name="card-outline" size={24} color={colors.white} />
-                <XText color={colors.white} >Partager ma carte</XText>
+                <Ionicons name="card-outline" size={24} color={colors.text} />
+                <XText color={colors.text} >Partager ma carte</XText>
               </XRow>
             </XButton>
             <XButton bordered width="100%" backgroundColor={colors.background} onPress={handleMyQRCodePress}>

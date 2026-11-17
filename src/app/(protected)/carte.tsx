@@ -57,7 +57,7 @@ const CardScreen = () => {
       <XScreen style={{ flex: 1 }}>
         {/* HEARDER */}
         <XRow>
-          <XText fontSize={24} fontWeight={900} textAlign="center">
+          <XText fontSize={18} fontWeight={700} textAlign="center">
             Ma carte
           </XText>
           <Ionicons onPress={handleProfilePress} name="share-social-outline" size={24} color="black" />

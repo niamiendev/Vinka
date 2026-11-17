@@ -202,7 +202,7 @@ const EditProfileScreen = () => {
               <Ionicons
                 name="arrow-back"
                 size={24}
-                color={colors.textGrey}
+                color={colors.text}
                 onPress={handleBack}
               />
               <XText fontSize={18} fontWeight={700} textAlign="center">
@@ -211,7 +211,7 @@ const EditProfileScreen = () => {
               <Ionicons
                 name="globe-outline"
                 size={24}
-                color={colors.textGrey}
+                color={colors.text}
                 onPress={() => router.navigate("/(protected)/social-network")}
               />
             </XRow>

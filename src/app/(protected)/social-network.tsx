@@ -73,7 +73,7 @@ const SocialsScreen = () => {
       >
         <XRow width={"100%"} style={styles.header}>
           <Pressable onPress={() => router.back()} hitSlop={10} style={styles.back}>
-            <Ionicons name="arrow-back" size={24} color={colors.textGrey} />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </Pressable>
           <XText fontSize={18} fontWeight={700} textAlign="center">
             Réseaux sociaux

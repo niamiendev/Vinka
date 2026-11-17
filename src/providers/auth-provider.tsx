@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
 
         if (firebaseUser) { setUser(firebaseUser) }
-        
+
       } catch (e) {
         console.error(e)
       } finally {
@@ -69,17 +69,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error) {
       if (auth.currentUser) await signOut(auth).catch(() => { })
       throw new Error(getErrorMessage(error))
-    } finally {}
+    } finally { }
   }
 
   // logout
 
   const logout = async () => {
     try {
-      await signOut(auth)
+      await signOut(auth);
+
     } catch (error) {
-      throw new Error(getErrorMessage(error))
-    }
+      throw new Error(getErrorMessage(error));
+    } finally { setUser(null); }
   }
 
   return (

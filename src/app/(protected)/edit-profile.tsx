@@ -175,10 +175,17 @@ const EditProfileScreen = () => {
     }
   };
 
+  // back
   const handleBack = () => {
     if (router.canGoBack()) {
       router.back();
     }
+  }
+
+  // logout
+  const handleLogout = async () => {
+    await logout();
+    //router.replace("/(auth)/login");
   }
 
   return (
@@ -251,10 +258,7 @@ const EditProfileScreen = () => {
 
                 <TouchableOpacity
                   style={{ flexDirection: "row", justifyContent: "center", gap: 8, alignItems: "center" }}
-                  onPress={() => {
-                    logout();
-                    router.replace("/(auth)/login");
-                  }}
+                  onPress={handleLogout}
                 >
                   <Ionicons
                     name="log-out-outline"

@@ -1,8 +1,10 @@
 
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 
 import SocialLinks from "@/components/SocialLinks";
+import AddToContacts from "@/components/AddToContacts";
 import { getPublicProfile } from "@/services/profile";
 
 type PageProps = {
@@ -26,15 +28,21 @@ export default function PublicProfilePage({ params }: PageProps) {
 }
 
 async function ProfileContent({ params }: PageProps) {
+  // Attend une requête utilisateur avant le rendu dynamique
+  await connection();
+
   const { userId } = await params;
 
+  // Récupération du profil public
   const profile = await getPublicProfile(userId);
 
+  // Profil inexistant : afficher la page 404
   if (!profile) {
     notFound();
   }
 
-  const fullName = `${profile.first_name} ${profile.last_name}`;
+  const fullName =
+    `${profile.first_name} ${profile.last_name}`.trim();
 
   return (
     <main className="min-h-screen bg-[#F8F4EE] px-4 py-12">
@@ -74,17 +82,15 @@ async function ProfileContent({ params }: PageProps) {
 
         {/* Coordonnées */}
         <div className="space-y-4 border-t border-gray-100 px-6 py-7">
-          {(profile.phone_pro || profile.phone_number) && (
+          {profile.phone_pro && (
             <p>
-              <strong>Téléphone :</strong>{" "}
-              {profile.phone_pro || profile.phone_number}
+              <strong>Téléphone :</strong> {profile.phone_pro}
             </p>
           )}
 
-          {(profile.email_pro || profile.email) && (
+          {profile.email_pro && (
             <p>
-              <strong>Email :</strong>{" "}
-              {profile.email_pro || profile.email}
+              <strong>Email :</strong> {profile.email_pro}
             </p>
           )}
 
@@ -122,18 +128,13 @@ async function ProfileContent({ params }: PageProps) {
           </h2>
 
           <div className="flex justify-center">
-            <SocialLinks socials={profile.socials} />
+            <SocialLinks socials={profile.socials ?? {}} />
           </div>
         </div>
 
         {/* Ajouter aux contacts */}
-        <div className="px-6 pb-8">
-          <button
-            disabled
-            className="w-full rounded-xl bg-[#24152F] px-6 py-4 font-semibold text-white opacity-60"
-          >
-            Ajouter aux contacts
-          </button>
+        <div className="px-6 pb-8 text-center">
+          <AddToContacts profile={profile} />
         </div>
 
       </div>

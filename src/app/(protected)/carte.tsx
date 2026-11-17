@@ -1,3 +1,4 @@
+import { XQrcode } from '@/components/qrcode/XQrCode'
 import XColumn from '@/components/XColumn'
 import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
@@ -135,14 +136,12 @@ const CardScreen = () => {
               </XRow>
             </XColumn>
             <XSpace height={16} />
-            <Image
-              source={require('@/assets/images/qrcode.png')}
-              style={{ width: 100, height: 100, alignSelf: 'center' }}
-            />
+
+            <XQrcode size={100} />
 
             { /* STATS */}
-            <XRow width="100%" justifyContent="space-between" backgroundColor={colors.white} style={{ paddingTop: 24 }} >
-              <XRow backgroundColor={colors.white} width="50%" justifyContent="center"  >
+            <XRow width="100%" justifyContent="space-between" style={{ paddingTop: 24 }} >
+              <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
                 <XRow gap={12} >
                   <Ionicons name="eye-outline" size={24} color={colors.purple} />
                   <XColumn gap={5}>
@@ -151,7 +150,7 @@ const CardScreen = () => {
                   </XColumn>
                 </XRow>
               </XRow>
-              <XRow backgroundColor={colors.white} width="50%" justifyContent="center"  >
+              <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
                 <XRow gap={12}>
                   <Ionicons name="share-social-outline" size={24} color={colors.purple} />
                   <XColumn gap={5}>

@@ -1,3 +1,4 @@
+import { XQrcode } from '@/components/qrcode/XQrCode'
 import XButton from '@/components/XButton'
 import XColumn from '@/components/XColumn'
 import XRow from '@/components/XRow'
@@ -116,10 +117,10 @@ const HomeScreen = () => {
             backgroundColor={colors.background}
             style={{ paddingTop: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, }}
           >
-            <Image
-              source={require('@/assets/images/qrcode.png')}
-              style={{ width: 180, height: 180, alignSelf: 'center' }}
-            />
+            <XSpace height={8} />
+            <XQrcode />
+            <XSpace height={8} />
+
             <XButton width="100%">
               <XRow gap={8} >
                 <Ionicons name="share-social-outline" size={24} color={colors.white} />
@@ -140,8 +141,8 @@ const HomeScreen = () => {
             </XButton>
           </XColumn>
 
-          <XRow width="100%" justifyContent="space-between" backgroundColor={colors.white} style={{ paddingTop: 24 }} >
-            <XRow backgroundColor={colors.white} width="50%" justifyContent="center"  >
+          <XRow width="100%" justifyContent="space-between" backgroundColor={colors.background} style={{ paddingTop: 24 }} >
+            <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
               <XRow gap={12} >
                 <Ionicons name="eye-outline" size={24} color={colors.purple} />
                 <XColumn gap={5}>
@@ -150,7 +151,7 @@ const HomeScreen = () => {
                 </XColumn>
               </XRow>
             </XRow>
-            <XRow backgroundColor={colors.white} width="50%" justifyContent="center"  >
+            <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
               <XRow gap={12}>
                 <Ionicons name="share-social-outline" size={24} color={colors.purple} />
                 <XColumn gap={5}>
@@ -160,14 +161,9 @@ const HomeScreen = () => {
               </XRow>
             </XRow>
           </XRow>
-
         </XColumn>
       </XScreen>
-
     )
-
-
-
   )
 }
 

@@ -1,3 +1,4 @@
+import { XQrcode } from '@/components/qrcode/XQrCode'
 import XButton from '@/components/XButton'
 import XColumn from '@/components/XColumn'
 import XRow from '@/components/XRow'
@@ -11,7 +12,7 @@ import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 const QRCodedeScreen = () => {
 
@@ -80,10 +81,9 @@ const QRCodedeScreen = () => {
           backgroundColor={colors.background}
           style={{ paddingTop: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, }}
         >
-          <Image
-            source={require('@/assets/images/qrcode.png')}
-            style={{ width: 200, height: 200, alignSelf: 'center' }}
-          />
+          <XQrcode size={200} />
+          <XSpace height={8} />
+
           <XColumn style={{ alignItems: "center", gap: 12 }}>
             <XText textAlign='center' fontSize={24} fontWeight={700} color={colors.text}  >
               {

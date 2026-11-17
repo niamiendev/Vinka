@@ -1,5 +1,12 @@
+
 import { User } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 import { firestore } from "./firebase";
 
 export async function createProfile(user: User) {
@@ -8,6 +15,7 @@ export async function createProfile(user: User) {
     const snap = await getDoc(userRef);
 
     if (snap.exists()) return;
+
     const names = user.displayName?.trim().split(/\s+/) || ["", ""];
 
     const first_name = names[0] ?? "";
@@ -15,22 +23,24 @@ export async function createProfile(user: User) {
 
     await setDoc(userRef, {
       user_id: user.uid,
-      first_name: first_name,
-      last_name: last_name,
+      first_name,
+      last_name,
       email: user.email ?? "",
-      phone_number: user.phoneNumber,
-      photo_url: user.photoURL,
+      phone_number: user.phoneNumber ?? null,
+      photo_url: user.photoURL ?? null,
 
       profession: null,
       phone_pro: null,
       email_pro: null,
       address: null,
       localisation: null,
+      website: null,
       company: null,
       socials: {},
 
-      created_at: new Date(),
+      created_at: serverTimestamp(),
     });
+
   } catch (error) {
     console.error("Error creating profile:", error);
   }

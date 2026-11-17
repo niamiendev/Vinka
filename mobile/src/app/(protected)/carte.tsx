@@ -140,7 +140,7 @@ const CardScreen = () => {
             <XQrcode size={100} />
 
             { /* STATS */}
-            <XRow width="100%" justifyContent="space-between" style={{ paddingTop: 24 }} >
+            {/*<XRow width="100%" justifyContent="space-between" style={{ paddingTop: 24 }} >
               <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
                 <XRow gap={12} >
                   <Ionicons name="eye-outline" size={24} color={colors.purple} />
@@ -159,7 +159,7 @@ const CardScreen = () => {
                   </XColumn>
                 </XRow>
               </XRow>
-            </XRow>
+            </XRow>*/}
           </XColumn>
 
         </XColumn>

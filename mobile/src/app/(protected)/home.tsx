@@ -11,8 +11,12 @@ import { ProfileItem } from '@/models/profile-item'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+
+import ViewShot from "react-native-view-shot";
+import * as Sharing from "expo-sharing";
+
 
 const HomeScreen = () => {
 
@@ -20,6 +24,7 @@ const HomeScreen = () => {
   const [profile, setProfile] = useState<ProfileItem | null>(null);
   const router = useRouter();
   const [isReady, setIsReady] = useState(true);
+  const qrRef = useRef<any>(null);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -39,6 +44,30 @@ const HomeScreen = () => {
 
     fetchProfile();
   }, [user?.uid]);
+
+
+  {/*  share */}
+  const handleShareQRCode = async () => {
+    try {
+      if (!qrRef.current?.capture) return;
+
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (!isAvailable) {
+        console.log("Le partage n'est pas disponible.");
+        return;
+      }
+
+      const uri = await qrRef.current.capture();
+
+      await Sharing.shareAsync(uri, {
+        mimeType: "image/png",
+        dialogTitle: "Partager mon QR code VIKA",
+        UTI: "public.png",
+      });
+    } catch (error) {
+      console.error("Erreur de partage du QR code :", error);
+    }
+  };
 
   const handleProfilePress = () => {
     router.push('/(protected)/edit-profile');
@@ -118,10 +147,16 @@ const HomeScreen = () => {
             style={{ paddingTop: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, }}
           >
             <XSpace height={8} />
-            <XQrcode />
+            <ViewShot
+              ref={qrRef}
+              options={{ format: "png", quality: 1 }}
+              style={{ backgroundColor: "#fff", padding: 16, alignItems: "center" }}
+            >
+              <XQrcode size={150} />
+            </ViewShot>
             <XSpace height={8} />
 
-            <XButton width="100%" backgroundColor={colors.ternary}>
+            <XButton width="100%" backgroundColor={colors.ternary} onPress={handleShareQRCode} >
               <XRow gap={8} >
                 <Ionicons name="share-social-outline" size={24} color={colors.text} />
                 <XText color={colors.text}  >Partager ma carte</XText>
@@ -141,7 +176,7 @@ const HomeScreen = () => {
             </XButton>
           </XColumn>
 
-          <XRow width="100%" justifyContent="space-between" backgroundColor={colors.background} style={{ paddingTop: 24 }} >
+          {/*<XRow width="100%" justifyContent="space-between" backgroundColor={colors.background} style={{ paddingTop: 24 }} >
             <XRow backgroundColor={colors.background} width="50%" justifyContent="center"  >
               <XRow gap={12} >
                 <Ionicons name="eye-outline" size={24} color={colors.purple} />
@@ -160,7 +195,7 @@ const HomeScreen = () => {
                 </XColumn>
               </XRow>
             </XRow>
-          </XRow>
+          </XRow>*/}
         </XColumn>
       </XScreen>
     )

@@ -11,11 +11,13 @@ type Props = {
     size?: number;
 };
 
-export const XQrcode = ({ size = 150 }: Props) => {
+export const XQrcode = ({ size = 200 }: Props) => {
     const { user } = useAuth();
 
     const [vCard, setVCard] = useState("");
     const [loading, setLoading] = useState(true);
+
+    const profileUrl = `https://vinka-web.vercel.app//u/${user?.uid}`;
 
     useEffect(() => {
         let isMounted = true;
@@ -62,6 +64,8 @@ export const XQrcode = ({ size = 150 }: Props) => {
         };
     }, [user?.uid]);
 
+    
+
     if (loading) {
         return (
             <View
@@ -81,5 +85,5 @@ export const XQrcode = ({ size = 150 }: Props) => {
         return null;
     }
 
-    return <QRCode value={vCard} size={size} logo={require("@/assets/images/icon.png")} logoSize={size / 4} />;
+    return <QRCode value={profileUrl} size={size} logo={require("@/assets/images/icon.png")} logoSize={size / 4} />;
 };

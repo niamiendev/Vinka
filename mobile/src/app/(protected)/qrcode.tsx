@@ -11,8 +11,11 @@ import { ProfileItem } from '@/models/profile-item'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native'
+import ViewShot from 'react-native-view-shot'
+import * as Sharing from "expo-sharing";
+import * as MediaLibrary from "expo-media-library/legacy";
 
 const QRCodedeScreen = () => {
 
@@ -20,6 +23,7 @@ const QRCodedeScreen = () => {
   const [profile, setProfile] = useState<ProfileItem | null>(null);
   const router = useRouter();
   const [isReady, setIsReady] = useState(true)
+  const qrRef = useRef<any>(null);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -40,21 +44,58 @@ const QRCodedeScreen = () => {
     fetchProfile();
   }, [user?.uid]);
 
+  {/*  share */}
+  const handleShareQRCode = async () => {
+    try {
+      if (!qrRef.current?.capture) return;
+
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (!isAvailable) {
+        console.log("Le partage n'est pas disponible.");
+        return;
+      }
+
+      const uri = await qrRef.current.capture();
+
+      await Sharing.shareAsync(uri, {
+        mimeType: "image/png",
+        dialogTitle: "Partager mon QR code VIKA",
+        UTI: "public.png",
+      });
+    } catch (error) {
+      console.error("Erreur de partage du QR code :", error);
+    }
+  };
+
   const handlBackPress = () => {
     if (router.canGoBack()) {
       router.back();
     }
 
   }
-  const handleDownloadPress = () => {
+  const handleDownloadQRCode = async () => {
+  try {
+    if (!qrRef.current?.capture) return;
 
+    const permission = await MediaLibrary.requestPermissionsAsync(true);
+    if (!permission.granted) {
+      Alert.alert("Permission refusée", "Autorise l'accès aux photos pour enregistrer le QR code.");
+      return;
+    }
+
+    const uri = await qrRef.current.capture();
+    await MediaLibrary.saveToLibraryAsync(uri);
+
+    Alert.alert("Succès", "Le QR code a été enregistré dans ta galerie.");
+  } catch (error) {
+    console.error("Erreur de téléchargement du QR code :", error);
+    Alert.alert("Erreur", "Impossible d'enregistrer le QR code.");
   }
+};
   const handleSavePress = () => {
 
   }
-  const handleSharePress = () => {
-
-  }
+ 
 
   return (
     isReady ? (
@@ -70,7 +111,7 @@ const QRCodedeScreen = () => {
           <XText fontSize={18} fontWeight={700} textAlign="center">
             Mon QR Code
           </XText>
-          <Ionicons onPress={handleSharePress} name="share-social-outline" size={24} color="black" />
+          <Ionicons onPress={handleShareQRCode} name="share-social-outline" size={24} color="black" />
         </XRow>
         <XSpace height={32} />
 
@@ -81,7 +122,14 @@ const QRCodedeScreen = () => {
           backgroundColor={colors.background}
           style={{ paddingTop: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, }}
         >
-          <XQrcode size={200} />
+          <XSpace height={8} />
+          <ViewShot
+            ref={qrRef}
+            options={{ format: "png", quality: 1 }}
+            style={{ backgroundColor: "#fff", padding: 16, alignItems: "center" }}
+          >
+            <XQrcode />
+          </ViewShot>
           <XSpace height={8} />
 
           <XColumn style={{ alignItems: "center", gap: 12 }}>
@@ -97,19 +145,14 @@ const QRCodedeScreen = () => {
             </XText>
           </XColumn>
           <XSpace height={24} />
-          <XButton width="100%" backgroundColor={colors.ternary} onPress={handleDownloadPress}>
-            <XRow gap={8} >
-              <Ionicons name="download-outline" size={24} color={colors.text} />
-              <XText color={colors.text} fontWeight={"700"}>Télécharger</XText>
-            </XRow>
-          </XButton>
-          <XButton width="100%" backgroundColor={colors.ternary} onPress={handleSharePress}>
+         
+          <XButton width="100%" backgroundColor={colors.ternary} onPress={handleShareQRCode}>
             <XRow gap={8} >
               <Ionicons name="share-social-outline" size={24} color={colors.text} />
               <XText color={colors.text} fontWeight={"700"}>Partager ma carte</XText>
             </XRow>
           </XButton>
-          <XButton width="100%" backgroundColor={colors.ternary} onPress={handleSavePress}>
+          <XButton width="100%" backgroundColor={colors.ternary} onPress={handleDownloadQRCode}>
             <XRow gap={8} >
               <Ionicons name="save-outline" size={24} color={colors.text} />
               <XText color={colors.text} fontWeight={"700"}>Enregistrer dans la galerie</XText>

@@ -12,10 +12,12 @@ type Props = TouchableOpacityProps & {
     backgroundColor?: string;
     width?: string | number;
     loading?: boolean;
+    bordered?: boolean;
 };
 
 const XButton = ({
     backgroundColor = colors.primary,
+    bordered = false,
     width,
     children,
     loading = false,
@@ -42,6 +44,7 @@ const XButton = ({
             activeOpacity={0.7}
             style={[
                 styles.container,
+                bordered && styles.border,
                 { backgroundColor, width },
                 style,
             ]}
@@ -64,5 +67,9 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    border: {
+        borderWidth: 1,
+        borderColor: colors.purple,
     },
 });

@@ -10,8 +10,11 @@ import { ProfileItem } from '@/models/profile-item'
 import { colors } from '@/utils/theme'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native'
+import * as Sharing from "expo-sharing";
+import ViewShot from 'react-native-view-shot'
+
 
 const CardScreen = () => {
 
@@ -19,6 +22,7 @@ const CardScreen = () => {
   const [profile, setProfile] = useState<ProfileItem | null>(null);
   const router = useRouter();
   const [isReady, setIsReady] = useState(true)
+const qrRef = useRef<any>(null);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -39,9 +43,28 @@ const CardScreen = () => {
     fetchProfile();
   }, [user?.uid]);
 
-  const handleProfilePress = () => {
-    router.push('/(protected)/edit-profile');
-  }
+  {/*  share */}
+    const handleShareQRCode = async () => {
+      try {
+        if (!qrRef.current?.capture) return;
+  
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          console.log("Le partage n'est pas disponible.");
+          return;
+        }
+  
+        const uri = await qrRef.current.capture();
+  
+        await Sharing.shareAsync(uri, {
+          mimeType: "image/png",
+          dialogTitle: "Partager mon QR code VIKA",
+          UTI: "public.png",
+        });
+      } catch (error) {
+        console.error("Erreur de partage du QR code :", error);
+      }
+    };
   const handleMyCardPress = () => {
     if (router.canGoBack()) {
       router.back();
@@ -60,7 +83,7 @@ const CardScreen = () => {
           <XText fontSize={18} fontWeight={700} textAlign="center">
             Ma carte
           </XText>
-          <Ionicons onPress={handleProfilePress} name="share-social-outline" size={24} color="black" />
+          <Ionicons onPress={handleShareQRCode} name="share-social-outline" size={24} color="black" />
         </XRow>
         <XSpace height={24} />
 
@@ -137,7 +160,13 @@ const CardScreen = () => {
             </XColumn>
             <XSpace height={16} />
 
-            <XQrcode size={100} />
+            <ViewShot
+              ref={qrRef}
+              options={{ format: "png", quality: 1 }}
+              style={{ backgroundColor: "#fff", padding: 16, alignItems: "center" }}
+            >
+              <XQrcode size={100} />
+            </ViewShot>
 
             { /* STATS */}
             {/*<XRow width="100%" justifyContent="space-between" style={{ paddingTop: 24 }} >

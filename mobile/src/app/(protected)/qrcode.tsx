@@ -92,10 +92,6 @@ const QRCodedeScreen = () => {
     Alert.alert("Erreur", "Impossible d'enregistrer le QR code.");
   }
 };
-  const handleSavePress = () => {
-
-  }
- 
 
   return (
     isReady ? (

@@ -87,7 +87,7 @@ const LoginScreen = () => {
           </Pressable>
 
           <XSpace height={24} />
-          <XButton width="100%" loading={loading} onPress={handleLogin}>
+          <XButton width="100%" loading={loading} onPress={handleLogin} disabled = {!email || !password}>
             <XText fontSize={16} fontWeight={700} color="white">
               Se connecter
             </XText>

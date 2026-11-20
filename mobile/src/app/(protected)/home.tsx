@@ -165,7 +165,7 @@ const HomeScreen = () => {
             <XButton width="100%" backgroundColor={colors.secondary} onPress={handleMyCardPress}>
               <XRow gap={8} >
                 <Ionicons name="card-outline" size={24} color={colors.text} />
-                <XText color={colors.text} >Partager ma carte</XText>
+                <XText color={colors.text} >Voir ma carte</XText>
               </XRow>
             </XButton>
             <XButton bordered width="100%" backgroundColor={colors.background} onPress={handleMyQRCodePress}>

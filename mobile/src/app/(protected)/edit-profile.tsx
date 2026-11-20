@@ -2,6 +2,7 @@ import XButton from '@/components/XButton'
 import XField from '@/components/XField'
 import XRow from '@/components/XRow'
 import XScreen from '@/components/XScreen'
+import XSpace from '@/components/XSpace'
 import XText from '@/components/XText'
 import useAuth from '@/hooks/useAuth'
 import { auth, firestore, storage } from '@/libs/firebase'
@@ -185,7 +186,6 @@ const EditProfileScreen = () => {
   // logout
   const handleLogout = async () => {
     await logout();
-    //router.replace("/(auth)/login");
   }
 
   return (
@@ -256,6 +256,9 @@ const EditProfileScreen = () => {
                   </View>
                 </Pressable>
 
+                <XSpace height={8} />
+
+                {/* logout button */}
                 <TouchableOpacity
                   style={{ flexDirection: "row", justifyContent: "center", gap: 8, alignItems: "center" }}
                   onPress={handleLogout}
@@ -273,6 +276,7 @@ const EditProfileScreen = () => {
                     Logout
                   </XText>
                 </TouchableOpacity>
+                <XSpace height={8} />
               </View>
 
               <View style={styles.form}>

@@ -45,7 +45,7 @@ const XButton = ({
             style={[
                 styles.container,
                 bordered && styles.border,
-                { backgroundColor, width },
+                { backgroundColor : disabled ? colors.ternary : backgroundColor, width },
                 style,
             ]}
             onPress={handlePress}
